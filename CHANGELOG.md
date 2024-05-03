@@ -1,8 +1,6 @@
 # Changelog
-All notable changes to this project will be documented in this file.
+All notable changes to `bitmask` will be documented in this file
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/)
-and this project adheres to [Semantic Versioning](http://semver.org/).
+## 1.0.0 - 201X-XX-XX
 
-## [Unreleased]
-- Adds first version
+- initial release

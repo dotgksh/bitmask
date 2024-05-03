@@ -3,6 +3,7 @@
     "description": "A bitmask value object for PHP",
     "keywords": ["php", "binary", "bitmask", "bitwise", "bitfield", "bit flags"],
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
             "name": "Gustavo Karkow",
