@@ -6,9 +6,9 @@
 A simple way to use bitmask and bitwise operations in PHP.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/gksh/bitmask.svg)](https://packagist.org/packages/gksh/bitmask)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/dotgksh/bitmask/Tests/main?label=tests)](https://github.com/dotgksh/bitmask/actions?query=workflow%3Atests+branch%3Amain)
-[![License](https://img.shields.io/packagist/l/dotgksh/bitmask.svg)](https://github.com/dotgksh/bitmask/blob/main/LICENSE.md)
-[![Total Downloads](https://img.shields.io/packagist/dt/dotgksh/bitmask.svg)](https://packagist.org/packages/dotgksh/bitmask)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/dotgksh/bitmask/tests.yml?branch=main)](https://github.com/dotgksh/bitmask/actions?query=workflow%3Atests+branch%3Amain)
+[![License](https://img.shields.io/packagist/l/gksh/bitmask.svg)](https://github.com/dotgksh/bitmask/blob/main/LICENSE.md)
+[![Total Downloads](https://img.shields.io/packagist/dt/gksh/bitmask.svg)](https://packagist.org/packages/gksh/bitmask)
 
 ## Installation
 > **Requires [PHP 8.2+](https://php.net/releases/)**
