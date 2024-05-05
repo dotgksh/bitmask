@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://banners.beyondco.de/gksh%2Fbitmask.png?theme=light&packageManager=composer+require&packageName=gksh%2Fbitmask&pattern=architect&style=style_1&description=A+bitmask+value+object+for+PHP&md=1&showWatermark=0&fontSize=200px&images=flag&widths=100&heights=100" alt="Bitmask banner">
+    <img src="https://banners.beyondco.de/gksh%2Fbitmask.png?theme=light&packageManager=composer+require&packageName=gksh%2Fbitmask&pattern=wiggle&style=style_1&description=A+bitmask+value+object+for+PHP&md=1&showWatermark=0&fontSize=200px&images=flag&widths=100&heights=100" alt="Bitmask banner">
 </p>
 
 # gksh/bitmask
