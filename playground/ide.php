@@ -2,7 +2,7 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Gksh\Bitmask\TinyBitmask;
+use Gksh\Bitmask\Bitmask;
 
 enum Panel: int
 {
@@ -12,43 +12,30 @@ enum Panel: int
     case Extensions = 1 << 3;
 }
 
-class Panels extends TinyBitmask
-{
-    public function isVisible(Panel $panel): bool
-    {
-        return $this->has($panel->value);
-    }
-
-    public function togglePanel(Panel $panel): Panels
-    {
-        return $this->toggle($panel->value);
-    }
-}
-
 class Ide
 {
-    public Panels $panels;
+    public Bitmask $panels;
 
     public function __construct()
     {
-        $this->panels = Panels::make();
+        $this->panels = Bitmask::tiny();
     }
 
     public function togglePanel(Panel $panel): self
     {
-        $this->panels->togglePanel($panel);
+        $this->panels = $this->panels->toggle($panel);
 
         return $this;
     }
 }
 
-$ide = (new Ide())
+$ide = (new Ide)
     ->togglePanel(Panel::Project)
     ->togglePanel(Panel::Terminal);
 
 dump([
-    'project' => $ide->panels->isVisible(Panel::Project), // true
-    'terminal' => $ide->panels->isVisible(Panel::Terminal), // true
-    'source_control' => $ide->panels->isVisible(Panel::SourceControl), // false
-    'extensions' => $ide->panels->isVisible(Panel::Extensions), // false
+    'project' => $ide->panels->has(Panel::Project), // true
+    'terminal' => $ide->panels->has(Panel::Terminal), // true
+    'source_control' => $ide->panels->has(Panel::SourceControl), // false
+    'extensions' => $ide->panels->has(Panel::Extensions), // false
 ]);

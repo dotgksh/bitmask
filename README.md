@@ -16,12 +16,14 @@ A simple way to use bitmask and bitwise operations in PHP.
 composer require gksh/bitmask
 ```
 
-## 🧪 Usage
+## Usage
 Streamline flag handling by encoding boolean options into simple integers through bitmasking.
 
 > Please see [ide.php](./playground/ide.php) for full example and [playground](./playground) for more.
 
 ```php
+use Gksh\Bitmask\Bitmask;
+
 enum Panel: int
 {
     case Project = 1;
@@ -30,26 +32,18 @@ enum Panel: int
     case Extensions = 8;
 }
 
-class Panels extends TinyBitmask
-{
-    public function isVisible(Panel $panel): bool
-    {
-        return $this->has($panel->value);
-    }
-
-    public function togglePanel(Panel $panel): Panels
-    {
-        return $this->toggle($panel->value);
-    }
-}
-
 class Ide
 {
-    public Panels $panels;
+    public Bitmask $panels;
+
+    public function __construct()
+    {
+        $this->panels = Bitmask::tiny(); // 8-bit
+    }
 
     public function togglePanel(Panel $panel): self
     {
-        $this->panels->togglePanel($panel);
+        $this->panels = $this->panels->toggle($panel);
 
         return $this;
     }
@@ -59,8 +53,36 @@ $ide = (new Ide())
     ->togglePanel(Panel::Project)
     ->togglePanel(Panel::Terminal);
 
-$ide->panels->isVisible(Panel::Terminal); // true
-$ide->panels->isVisible(Panel::Extensions); // false
+$ide->panels->has(Panel::Terminal); // true
+$ide->panels->has(Panel::Extensions); // false
+```
+
+### Features
+
+- **Immutable**: Operations return new instances, original unchanged
+- **Enum support**: Pass `BackedEnum` directly — no `->value` extraction needed
+- **Size variants**: `tiny()` (8-bit), `small()` (16-bit), `medium()` (24-bit), `make()` (32-bit default)
+
+### Factory Methods
+
+```php
+Bitmask::make()         // 32-bit (default)
+Bitmask::tiny()         // 8-bit, for TINYINT columns
+Bitmask::small()        // 16-bit, for SMALLINT columns
+Bitmask::medium()       // 24-bit, for MEDIUMINT columns
+```
+
+### Operations
+
+```php
+$mask = Bitmask::tiny()
+    ->set(Flag::A)      // Set a flag
+    ->unset(Flag::B)    // Unset a flag
+    ->toggle(Flag::C);  // Toggle a flag
+
+$mask->has(Flag::A);    // Check if flag is set
+$mask->value();         // Get integer value
+$mask->size();          // Get Size enum
 ```
 
 ## Testing
