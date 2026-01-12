@@ -2,8 +2,9 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Gksh\Bitmask\TinyBitmask;
+use Gksh\Bitmask\Bitmask;
 
+// BackedEnum with explicit power-of-two values
 enum OrderFlag: int
 {
     case Gift = 1 << 0; // 1
@@ -12,41 +13,23 @@ enum OrderFlag: int
     case ExpressShipping = 1 << 3; // 8
 }
 
-class OrderFlags extends TinyBitmask
-{
-    public function enable(OrderFlag $flag): OrderFlags
-    {
-        return $this->set($flag->value);
-    }
-
-    public function disable(OrderFlag $flag): OrderFlags
-    {
-        return $this->unset($flag->value);
-    }
-
-    public function enabled(OrderFlag $flag): bool
-    {
-        return $this->has($flag->value);
-    }
-}
-
 class Order
 {
     public ?string $promoCode = null;
 
     public ?string $giftMessage = null;
 
-    public OrderFlags $flags;
+    public Bitmask $flags;
 
     public function __construct()
     {
-        $this->flags = OrderFlags::make();
+        $this->flags = Bitmask::tiny();
     }
 
     public function promo(string $code): self
     {
         $this->promoCode = $code;
-        $this->flags->enable(OrderFlag::PromoCode);
+        $this->flags = $this->flags->set(OrderFlag::PromoCode);
 
         return $this;
     }
@@ -54,33 +37,33 @@ class Order
     public function gift(string $message): self
     {
         $this->giftMessage = $message;
-        $this->flags->enable(OrderFlag::Gift);
+        $this->flags = $this->flags->set(OrderFlag::Gift);
 
         return $this;
     }
 
     public function freeShipping(): self
     {
-        $this->flags->enable(OrderFlag::FreeShipping);
+        $this->flags = $this->flags->set(OrderFlag::FreeShipping);
 
         return $this;
     }
 
     public function expressShipping(): self
     {
-        $this->flags->enable(OrderFlag::ExpressShipping);
+        $this->flags = $this->flags->set(OrderFlag::ExpressShipping);
 
         return $this;
     }
 }
 
-$order = (new Order())
+$order = (new Order)
     ->promo('XMAS2024')
     ->gift('Merry Christmas!');
 
 dump([
-    'is_gift' => $order->flags->enabled(OrderFlag::Gift), // true
-    'has_promo_code' => $order->flags->enabled(OrderFlag::PromoCode), // true
-    'free_shipping' => $order->flags->enabled(OrderFlag::FreeShipping), // false
-    'express_shipping' => $order->flags->enabled(OrderFlag::ExpressShipping), // false
+    'is_gift' => $order->flags->has(OrderFlag::Gift), // true
+    'has_promo_code' => $order->flags->has(OrderFlag::PromoCode), // true
+    'free_shipping' => $order->flags->has(OrderFlag::FreeShipping), // false
+    'express_shipping' => $order->flags->has(OrderFlag::ExpressShipping), // false
 ]);

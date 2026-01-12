@@ -7,6 +7,8 @@ namespace Gksh\Bitmask\Values;
 use Gksh\Bitmask\Contracts\ValueObject;
 use InvalidArgumentException;
 
+use function Gksh\Bitmask\Support\isPowerOfTwo;
+
 readonly class PowerOfTwo implements ValueObject
 {
     public function __construct(private int $value)

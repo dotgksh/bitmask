@@ -2,20 +2,14 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Gksh\Bitmask\SmallBitmask;
-
-class JsonFlags extends SmallBitmask
-{
-}
+use Gksh\Bitmask\Bitmask;
 
 class Payload
 {
     /**
      * @param  array<string, mixed>  $data
      */
-    public function __construct(public array $data, public JsonFlags $flags)
-    {
-    }
+    public function __construct(public array $data, public Bitmask $flags) {}
 
     public function serialize(): false|string
     {
@@ -25,7 +19,7 @@ class Payload
 
 $payload = new Payload(
     ['foo' => 'bar', 'baz' => 'qux'],
-    JsonFlags::make()
+    Bitmask::small()
         ->set(JSON_PRETTY_PRINT)
         ->set(JSON_UNESCAPED_SLASHES)
 );

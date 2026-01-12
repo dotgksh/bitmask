@@ -8,7 +8,7 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Gksh\Bitmask\TinyBitmask;
+use Gksh\Bitmask\Bitmask;
 
 enum FindMethod: int
 {
@@ -36,35 +36,15 @@ enum FindMethod: int
     }
 }
 
-class FindAttempts extends TinyBitmask
-{
-    public ?int $pid = null;
-
-    public function recordAttempt(FindMethod $method): FindAttempts
-    {
-        return $this->set($method->value);
-    }
-
-    public function resetAttempt(FindMethod $method): FindAttempts
-    {
-        return $this->unset($method->value);
-    }
-
-    public function hasAttempted(FindMethod $method): bool
-    {
-        return $this->has($method->value);
-    }
-}
-
 class Property // extends Model
 {
     public ?int $pid = null;
 
-    public FindAttempts $attempts;
+    public Bitmask $attempts;
 
-    public function __construct(?FindAttempts $attempts = null)
+    public function __construct(?Bitmask $attempts = null)
     {
-        $this->attempts = $attempts ?? new FindAttempts();
+        $this->attempts = $attempts ?? Bitmask::tiny();
     }
 
     public function save(): void
@@ -73,7 +53,7 @@ class Property // extends Model
         dump([
             'property' => $this,
             'attempted' => array_map(fn (FindMethod $method) => [
-                $method->name => $this->attempts->hasAttempted($method),
+                $method->name => $this->attempts->has($method),
             ], FindMethod::cases()),
         ]);
     }
@@ -87,7 +67,7 @@ class FindIds // extends Command
             // Loop through the methods.
             foreach (FindMethod::cases() as $method) {
                 // Skip ones we've already tried.
-                if ($property->attempts->hasAttempted($method)) {
+                if ($property->attempts->has($method)) {
                     continue;
                 }
 
@@ -98,7 +78,7 @@ class FindIds // extends Command
                 // are currently disabled for any reason. We don't
                 // record an attempt, as we'll try those again.
                 if ($result !== false) {
-                    $property->attempts->recordAttempt($method);
+                    $property->attempts = $property->attempts->set($method);
                 }
 
                 // Stop processing once we find the PID.
@@ -128,11 +108,11 @@ class FindIds // extends Command
     {
         // Imagine this is querying the DB.
         return [
-            new Property(FindAttempts::make()),
-            new Property(FindAttempts::make(FindMethod::ADDRESS->value)),
-            new Property(FindAttempts::make(FindMethod::PARCEL->value | FindMethod::STREET->value)),
+            new Property(Bitmask::tiny()),
+            new Property(Bitmask::tiny(FindMethod::ADDRESS)),
+            new Property(Bitmask::tiny(FindMethod::PARCEL->value | FindMethod::STREET->value)),
         ];
     }
 }
 
-(new FindIds())->handle();
+(new FindIds)->handle();
